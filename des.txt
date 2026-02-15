@@ -1,0 +1,97 @@
+Transformation Parameters
+
+Roll Number: 102483080
+
+The transformation applied to the NO₂ feature is:
+
+z = x + a_r * sin(b_r * x)
+
+Where:
+
+a_r = 0.5 * (r mod 7)
+b_r = 0.3 * ((r mod 5) + 1)
+
+For r = 102483080:
+
+r mod 7 = 0
+r mod 5 = 0
+
+Therefore:
+
+a_r = 0.5 * 0 = 0
+b_r = 0.3 * 1 = 0.3
+
+Final values:
+
+a_r = 0
+b_r = 0.3
+
+Since a_r = 0, the transformation reduces to:
+
+z = x
+
+Thus, the transformed variable is identical to the original NO₂ concentration.
+
+GAN Architecture Description
+
+A Generative Adversarial Network (GAN) was designed to learn the unknown probability density function of the transformed variable z using only sample data, without assuming any parametric form.
+
+Generator Network
+
+Input: 1-dimensional random noise sampled from a standard normal distribution N(0,1)
+
+Hidden Layer 1: Fully connected layer with 32 neurons and ReLU activation
+
+Hidden Layer 2: Fully connected layer with 32 neurons and ReLU activation
+
+Output Layer: Fully connected layer with 1 neuron (generated sample)
+
+The generator learns a mapping from random noise to synthetic samples that approximate the distribution of z.
+
+Discriminator Network
+
+Input: 1-dimensional sample (either real or generated)
+
+Hidden Layer 1: Fully connected layer with 32 neurons and ReLU activation
+
+Hidden Layer 2: Fully connected layer with 32 neurons and ReLU activation
+
+Output Layer: 1 neuron with Sigmoid activation
+
+The discriminator outputs the probability that a given sample is real.
+
+Training Configuration
+
+Loss Function: Binary Cross Entropy (BCE)
+
+Optimizer: Adam
+
+Learning Rate: 0.001
+
+Batch Size: 64
+
+Epochs: 2000
+
+During training:
+
+The discriminator learns to distinguish between real samples z and generated samples z_f = G(epsilon).
+
+The generator learns to fool the discriminator by producing realistic samples.
+
+Through adversarial learning, the generator approximates the underlying probability distribution of z.
+
+
+
+Observations:
+
+Mode Coverage
+
+The GAN successfully captured the dominant mode of the NO₂ distribution. The peak of the generated distribution aligns closely with the peak observed in the real data histogram. This indicates that the generator effectively learned the central region where most data samples are concentrated. Minor variations in secondary regions were slightly smoothed due to the Kernel Density Estimation (KDE) process used for PDF approximation.
+
+Training Stability
+
+During training, the discriminator and generator losses exhibited oscillatory behavior, which is typical in adversarial learning. However, no instability, divergence, or mode collapse was observed. The generator and discriminator reached a dynamic equilibrium where neither network consistently overpowered the other. This suggests stable training dynamics throughout the training process.
+
+Quality of Generated Distribution
+
+The generated samples reproduced the overall shape, spread, and central tendency of the real NO₂ distribution. The variance and distribution range of the generated data were comparable to the real samples. Slight smoothing was observed in the tail regions due to KDE bandwidth selection. Overall, the GAN was able to approximate the unknown probability density function effectively using only sample data and without assuming any parametric form.
